@@ -27,4 +27,9 @@ runs:
 
       - name: Set VIRTUAL_ENV
         shell: bash
-        run: echo "VIRTUAL_ENV=$(pwd)/.venv" >> $GITHUB_ENV
+        run: |
+          cd backend
+          echo "Setting up VIRTUAL_ENV"
+          export VIRTUAL_ENV=$(pwd)/.venv
+          echo "VIRTUAL_ENV set to $VIRTUAL_ENV"
+          echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV

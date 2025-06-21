@@ -10,11 +10,6 @@ on:
       - main
       - "test*"
 
-defaults:
-  run:
-    working-directory: backend
-    shell: bash
-
 jobs:
   lint:
     name: Lint
@@ -27,7 +22,7 @@ jobs:
         uses: ./.github/actions/setup-backend-machine
 
       - name: Run Lint
-        run: uv run ruff check
+        run: uv run pre-commit run backend-lint
 
   pytest:
     name: Test
@@ -40,7 +35,7 @@ jobs:
         uses: ./.github/actions/setup-backend-machine
 
       - name: Run Tests
-        run: uv run pytest
+        run: uv run pre-commit run backend-tests
 
   static-check:
     name: Static Check
@@ -53,4 +48,4 @@ jobs:
         uses: ./.github/actions/setup-backend-machine
 
       - name: Run Static Check
-        run: uv run ty check
+        run: uv run pre-commit run backend-static-check

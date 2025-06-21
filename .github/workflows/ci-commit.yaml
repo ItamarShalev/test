@@ -5,19 +5,10 @@ on:
     branches:
       - main
       - "test*"
-    paths:
-      - "scripts/**"
   pull_request:
     branches:
       - main
       - "test*"
-    paths:
-      - "scripts/**"
-
-defaults:
-  run:
-    working-directory: backend
-    shell: bash
 
 jobs:
   check-commit-message:

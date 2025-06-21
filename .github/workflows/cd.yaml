@@ -1,21 +1,29 @@
-name: CD
+name: CD - Deploy
 
 on:
-    workflow_run:
-        workflows: [CI]
-        types:
-            - completed
+  push:
+    branches:
+      - main
 
 jobs:
-    deploy:
-        if: >
-            (github.event.workflow_run.conclusion == 'success' ||
-             github.event.workflow_run.conclusion == 'skipped') &&
-            startsWith(github.event.workflow_run.name, 'CI')
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
+  wait:
+    name: Wait for All CI workflows
+    uses: ./.github/workflows/wait-for-workflows.yaml
+    with:
+      workflow_files: |
+        ci-backend.yaml
+        ci-frontend.yaml
+        ci-docker.yaml
+        ci-scripts.yaml
+        ci-commit.yaml
 
-            - name: Deploy
-              run: echo "Deploying application..."
+  deploy:
+    name: Deploy
+    needs: wait
+    if: needs.wait.outputs.all_passed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy website to AWS using docker
+        run: echo "All CI Passed. Deploying!"
