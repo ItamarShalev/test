@@ -1,0 +1,56 @@
+name: CI - Frontend
+
+on:
+  push:
+    branches:
+        - main
+        - "test*"
+  pull_request:
+    branches:
+        - main
+        - "test*"
+
+defaults:
+  run:
+    working-directory: frontend
+    shell: bash
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Frontend Machine
+        uses: ./.github/actions/setup-frontend-machine
+
+      - name: Run Build
+        run: npm run build
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Frontend Machine
+        uses: ./.github/actions/setup-frontend-machine
+
+      - name: Run Lint
+        run: npm run lint
+
+  pytest:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Frontend Machine
+        uses: ./.github/actions/setup-frontend-machine
+
+      - name: Run Tests
+        run: npm run test

@@ -1,0 +1,26 @@
+# This GitHub Action sets up the backend environment for development or CI/CD workflows.
+# The action ensures npm is installed, and project dependencies are synchronized.
+
+name: Setup Frontend Machine
+description: Set up Node.js, npm and install dependencies
+
+runs:
+  using: "composite"
+  steps:
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: "frontend/package.json"
+          enable-cache: true
+
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: ./node_modules
+          key: modules-${{ hashFiles('frontend/package-lock.json') }}
+
+      - name: Install npm dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: cd frontend && npm ci --include=dev --progress=false
